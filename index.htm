@@ -9,7 +9,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css" integrity="sha384-TEMocfGvRuD1rIAacqrknm5BQZ7W7uWitoih+jMNFXQIbNl16bO8OZmylH/Vi/Ei" crossorigin="anonymous">
   
 </head>
+<title>Khantribute_</title>
     <style>
+    :root {
+    --header-height: 64px;
+    
+    /* COLORS */
+    --cerulean-blue: #066ee2; 
+    --textcolor: #5e5e5e;
+          }
+
+/*--body{
+    font-family: 'Proxima Nova', Georgia, sans-serif;
+        }
+*/
     #headline {color: #999;}
     #thumbUpBtn {
         background-color: #0fea00;
@@ -43,28 +56,41 @@
         color: red;
     }
     #skipAnimIcon {
-        color: blue;
+        color: #0D55DB;
     }
     #textRow {
         margin-top:25px;margin-bottom:100px; position:relative;
     }
     #statsContainer {
-        text-align:center; font-size: 200%;margin-bottom:15px;color:blue;
+        text-align:center; font-size: 200%;margin-bottom:15px;color:#0D55DB;
     }
     #skipSpan {
         color:blue;position:absolute;width:33%; text-align: center;left:33.3%;top:0;
     }
+    /* .white-space-pre {
+    white-space: pre-wrap;
+    <div class="white-space-pre"> Some test \n with linebreaks</div> 
+    */
+}
     </style>
-     <img src="https://s13.postimg.org/lsf71a3ev/khantribute_Page1_Logo.png" > 
+     <img src="http://kagame-sv.localgrid.de/khantributePage1Logo.svg" style="width:40%;height:40%;float:left;" > 
+    
 </head>
 
 <body>
+  
     <div class="container">
+      
         <div class="row">
+          <span style="color:#0D55DB;float:right;size:height:25px;width:25px" onclick="feedback()">
+                <i class="material-icons">feedback</i>
+                
+            </span>
             <div class="twelve columns" id="statsContainer">
                 <span id="count">0</span> rösta (#<span id="rank">?</span>)
             </div>
         </div>
+        
         <div class="row">
             <div id="headline" class="twelve columns">
                 <h3 style="text-align: center;">Är den här texten bra svenska?</h3>
@@ -93,12 +119,13 @@
                     <span class="material-icons animIcon" id="skipAnimIcon">skip_next</span>
                 </div>
             </div>
+            
             <h3 id="text" class="perseus-text"></h3>
             
         </div>
     </div>
-<!--<div style="background-color: lightgrey;" cols="40" name="TextBoxSourceC" rows="2" class="perseus-text">Al tried to evaluate $4\\times425$ step by step.\n\n\n$$ | $\\phantom{=}\\greenD4\\times\\blueD{425}$\n- | -\n${\\text{Step } 1}$ | $=\\greenD4 \\times (\\blueD{400} + \\blueD{25} )$ \n${\\text{Step } 2}$ | $=(\\greenD4 \\times \\blueD{400}) + (\\greenD4 \\times \\blueD{25})$\n${\\text{Step } 3}$ |$=1600 + 100$\n${\\text{Step } 4}$ | $=1700$\n\n\n**Find Al's mistake.**\n\n[[☃ radio 1]]</div>-->
-    <!--<div class="container" style="position: fixed; bottom: 0; background-color: white;">
+    
+<!--    <!--<div class="container" style="position: fixed; bottom: 0; background-color: white;">
         <div class="row">
             <button id="thumbUpBtn" class="button button-primary twelve columns" onclick="thumbUp()">
                 <i class="material-icons">thumb_up</i>
@@ -133,8 +160,10 @@ $(document).ready(function() {
         console.log("foo")
         $(".perseus-text").each(function(idx) {
           // Fix double blackslash stuff
-          var txt = $(this).text().replace(/\\\\/g, "\\");
-          $(this).text(txt);
+          var txt = $(this).html().replace(/\\n{1,}/g, "<p></p>").replace(/\\\\/g, "\\");
+          // replace newline characters
+	//str =   txt = txt.replace(/\\n/g, "<br />");
+          $(this).html(txt);
           // Render
           renderMathInElement(this, {
             delimiters: [
@@ -163,6 +192,7 @@ function nextString() {
     }
     currentString = strings[0];
     $("#text").text(currentString.target);
+    //$("#text").text(currentString.target);
     strings = strings.slice(1);
     console.log(strings.length + " strings left");
 }
@@ -253,7 +283,16 @@ function skip() {
     submit(0);
     nextString();
 }
-
+function feedback() {
+  //window.open('mailto:test@example.com?subject=subject&body=body');
+    var recipient="khanacademysverige";
+    var at = String.fromCharCode(64);
+    var dotcom="gmail.com";
+    var msub="?subject=My Khantribute feedback:"
+    var mbod="&body= Hi Khantribute People,"
+    var mail="mailto:";
+    window.open(mail+recipient+at+dotcom+msub+mbod);
+}
 
 function fetchStrings() {
     $.getJSON("/api/strings?offset=" + count, function(data) {
