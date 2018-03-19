@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css" integrity="sha384-TEMocfGvRuD1rIAacqrknm5BQZ7W7uWitoih+jMNFXQIbNl16bO8OZmylH/Vi/Ei" crossorigin="anonymous">
-  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js" type="text/javascript"></script>
 </head>
 <title>Khantribute_</title>
     <style>
     :root {
-    --header-height: 64px;
+    --header-height: 68px;
     
     /* COLORS */
     --cerulean-blue: #066ee2; 
@@ -124,7 +124,7 @@
             
         </div>
     </div>
-    
+
 <!--    <!--<div class="container" style="position: fixed; bottom: 0; background-color: white;">
         <div class="row">
             <button id="thumbUpBtn" class="button button-primary twelve columns" onclick="thumbUp()">
@@ -159,11 +159,20 @@ $(document).ready(function() {
 $(document).ready(function() {
         console.log("foo")
         $(".perseus-text").each(function(idx) {
-          // Fix double blackslash stuff
-          var txt = $(this).html().replace(/\\n{1,}/g, "<p></p>").replace(/\\\\/g, "\\");
-          // replace newline characters
-	//str =   txt = txt.replace(/\\n/g, "<br />");
+          
+          var txt = $(this).text()
+          console.log("Orig text", txt);
+          txt = txt.replace(/\s*\[\[☃\s+[a-z-]+\s*\d*\]\]\s*/g, '<span style="border-radius: 5px; border: 1px solid; padding: 1px 5px;">User input</span>');
+          txt = txt.replace(/\\\\\\\\n/g, "┝");
+          txt = txt.replace(/\\\\(?=[a-zA-Z])/g, "\\")
+          txt = txt.replace(/┝/g, "\\\\\\");
+          console.log("stage 1", txt)
+          txt = txt .replace(/\\n(?![a-z])/g, "\\newline");
+          console.log("stage 2", txt)
+          txt = txt.replace(/\{align\}/g,"{aligned}");
+          
           $(this).html(txt);
+          console.log("New txt", txt);
           // Render
           renderMathInElement(this, {
             delimiters: [
@@ -178,10 +187,12 @@ $(document).ready(function() {
                 display: false
               },
             ]
-
           });
-          console.log(this);
-          console.log(katex)
+          // Convert leftover \newline
+          $(this).html($(this).html().replace(/\\newline/g, "<br/>"));
+          // Convert markdown
+          var converter = new showdown.Converter();
+          $(this).html(converter.makeHtml($(this).html()))
         });
       });
 function nextString() {
@@ -192,7 +203,6 @@ function nextString() {
     }
     currentString = strings[0];
     $("#text").text(currentString.target);
-    //$("#text").text(currentString.target);
     strings = strings.slice(1);
     console.log(strings.length + " strings left");
 }
